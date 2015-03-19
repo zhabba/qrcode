@@ -2,8 +2,6 @@ package org.xzha.qrcode.mbeans;
 
 import org.apache.log4j.Logger;
 
-import javax.enterprise.inject.Default;
-
 /**
  * Class org.xzha.qrcode.mbeans.QrcodeConfigImpl
  * created at 18.03.15 - 13:15
