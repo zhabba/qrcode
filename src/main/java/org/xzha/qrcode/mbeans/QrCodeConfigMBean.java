@@ -13,5 +13,5 @@ public interface QrCodeConfigMBean {
 	public void setDefaultData(String defaultData);
 	public String getDefaultData();
 
-	public String doConfig();
+	public String readConfig();
 }

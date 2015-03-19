@@ -7,12 +7,17 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.log4j.Logger;
-import org.xzha.qrcode.mbeans.QrCodeConfigImpl;
+import org.xzha.qrcode.mbeans.QrCodeConfig;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 import javax.inject.Inject;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +27,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -32,16 +38,14 @@ public class QrCodeGenServlet extends HttpServlet {
 
 	private static final Logger LOG = Logger.getLogger(QrCodeGenServlet.class);
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-    }
-
 	@Inject
-	private QrCodeConfigImpl qrMBean;
+	private QrCodeConfig qrMBean;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	@Override
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOG.info("GET request processing.");
-        int size;
+        // Parse parameters
+		int size;
 		String data = request.getParameter("data");
         String type = request.getParameter("type");
 		String ssize = request.getParameter("size");
@@ -92,7 +96,7 @@ public class QrCodeGenServlet extends HttpServlet {
             out.flush();
             out.close();
         } catch (WriterException e) {
-            e.printStackTrace();
+            LOG.error(e);
         }
     }
 }
