@@ -1,18 +1,28 @@
 package org.xzha.qrcode.mbeans;
 
+import javax.annotation.ManagedBean;
+import javax.enterprise.inject.Default;
+import javax.inject.Inject;
+
 /**
  * Class org.xzha.qrcode.mbeans.QrcodeConfigImpl
  * created at 18.03.15 - 13:15
  */
-public class QrcodeConfigImpl implements QrcodeConfigMBean{
+@Default
+public class QrCodeConfigImpl implements QrCodeConfigMBean {
+
+	private static final int DEFAULT_SIZE = 128;
+	private static final String DEFAULT_TYPE = "png";
+	private static final String DEFAULT_DATA = "Welcome to xzha!";
+
 	private int size;
 	private String type;
 	private String defaultData;
 
-	public QrcodeConfigImpl(int size, String type, String defaultData) {
-		this.size = size;
-		this.type = type;
-		this.defaultData = defaultData;
+	public QrCodeConfigImpl() {
+		this.size = DEFAULT_SIZE;
+		this.type = DEFAULT_TYPE;
+		this.defaultData = DEFAULT_DATA;
 	}
 
 	@Override
@@ -49,6 +59,4 @@ public class QrcodeConfigImpl implements QrcodeConfigMBean{
 	public String doConfig() {
 		return "Current out image size is " + getQrCodeSize() + " and type is " + getOutType() + " and data is " + getDefaultData();
 	}
-
-
 }

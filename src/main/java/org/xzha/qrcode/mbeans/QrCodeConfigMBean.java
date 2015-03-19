@@ -3,7 +3,7 @@ package org.xzha.qrcode.mbeans;
 /**
  * Created by zhabba on 18.03.15.
  */
-public interface QrcodeConfigMBean {
+public interface QrCodeConfigMBean {
 	public void setQrCodeSize(int size);
 	public int getQrCodeSize();
 

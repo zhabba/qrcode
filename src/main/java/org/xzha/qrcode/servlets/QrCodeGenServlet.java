@@ -6,12 +6,13 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.xzha.qrcode.mbeans.QrcodeConfigImpl;
+import org.apache.log4j.Logger;
+import org.xzha.qrcode.mbeans.QrCodeConfigImpl;
 
-import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
+import javax.inject.Inject;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -27,27 +28,32 @@ import java.util.Iterator;
 /**
  * Created by zhabba on 26.07.14.
  */
-public class QRCodeGenServlet extends HttpServlet {
+public class QrCodeGenServlet extends HttpServlet {
+
+	private static final Logger LOG = Logger.getLogger(QrCodeGenServlet.class);
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
-	@Resource
-	QrcodeConfigImpl qrMBean;
+	@Inject
+	private QrCodeConfigImpl qrMBean;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		LOG.info("GET request processing.");
         int size;
 		String data = request.getParameter("data");
         String type = request.getParameter("type");
 		String ssize = request.getParameter("size");
 		if (ssize == null || type == null || data == null) {
+			LOG.info("Using default data.");
 			size = qrMBean.getQrCodeSize();
 			type = qrMBean.getOutType();
+			data = qrMBean.getDefaultData();
 		} else {
 			size = Integer.parseInt(ssize);
 		}
         try {
-
             Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
             hintMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
             QRCodeWriter qrCodeWriter = new QRCodeWriter();
