@@ -59,4 +59,19 @@ public class QrCodeConfig implements QrCodeConfigMBean {
 		LOG.debug("size = " + String.valueOf(size) + " type = " + type + " data = " + defaultData);
 		return "Current out image size is " + size + " and type is " + type + " and data is " + defaultData;
 	}
+
+	@Override
+	public String readCurrentSize() {
+		return String.valueOf(getQrCodeSize());
+	}
+
+	@Override
+	public String readCurrentType() {
+		return String.valueOf(getOutType());
+	}
+
+	@Override
+	public String readCurrentData() {
+		return String.valueOf(getDefaultData());
+	}
 }

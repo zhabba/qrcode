@@ -14,4 +14,10 @@ public interface QrCodeConfigMBean {
 	public String getDefaultData();
 
 	public String readConfig();
+
+	public String readCurrentSize();
+
+	public String readCurrentType();
+
+	public String readCurrentData();
 }

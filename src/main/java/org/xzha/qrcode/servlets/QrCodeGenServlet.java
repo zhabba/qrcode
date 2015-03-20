@@ -7,12 +7,12 @@ import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.log4j.Logger;
-import org.xzha.qrcode.mbeans.QrCodeConfig;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
-import javax.inject.Inject;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.lang.management.ManagementFactory;
 import java.util.Hashtable;
 import java.util.Iterator;
 
@@ -32,9 +33,6 @@ public class QrCodeGenServlet extends HttpServlet {
 
 	private static final Logger LOG = Logger.getLogger(QrCodeGenServlet.class);
 
-	@Inject
-	private QrCodeConfig qrMBean;
-
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		LOG.info("GET request processing.");
@@ -44,10 +42,10 @@ public class QrCodeGenServlet extends HttpServlet {
         String type = request.getParameter("type");
 		String ssize = request.getParameter("size");
 		if (ssize == null || type == null || data == null) {
-			LOG.info("Using default data.");
-			size = qrMBean.getQrCodeSize();
-			type = qrMBean.getOutType();
-			data = qrMBean.getDefaultData();
+			size = Integer.parseInt((String) invokeMBean("readCurrentSize"));
+			type = (String) invokeMBean("readCurrentType");
+			data = (String) invokeMBean("readCurrentData");
+			LOG.debug(String.format("Using MBean data. size = %s, type = %s, data = %s.", size, type, data));
 		} else {
 			size = Integer.parseInt(ssize);
 		}
@@ -93,4 +91,21 @@ public class QrCodeGenServlet extends HttpServlet {
             LOG.error(e);
         }
     }
+
+	/**
+	 *
+	 * @param operation
+	 * @return
+	 */
+	private Object invokeMBean(String operation) {
+		Object result = null;
+		try {
+			ObjectName objectName = new ObjectName("org.xzha.qrcode.mbeans:type=QrCodeConfig");
+			MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+			result = mbs.invoke(objectName, operation, null, null);
+		} catch (Exception e) {
+			LOG.error(e);
+		}
+		return result;
+	}
 }
