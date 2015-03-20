@@ -8,70 +8,61 @@ import org.apache.log4j.Logger;
  */
 public class QrCodeConfig implements QrCodeConfigMBean {
 
-	private static final int DEFAULT_SIZE = 128;
+	private static final String DEFAULT_SIZE = "128";
 	private static final String DEFAULT_TYPE = "png";
 	private static final String DEFAULT_DATA = "Welcome to xzha!";
 
 	private	static Logger LOG = Logger.getLogger(QrCodeConfig.class);
 
-	private int size;
+	private String size;
 	private String type;
-	private String defaultData;
+	private String data;
 
 	public QrCodeConfig() {
 		this.size = DEFAULT_SIZE;
 		this.type = DEFAULT_TYPE;
-		this.defaultData = DEFAULT_DATA;
-	}
-
-	@Override
-	public void setQrCodeSize(int size) {
-		this.size = size;
-	}
-
-	@Override
-	public int getQrCodeSize() {
-		return size;
-	}
-
-	@Override
-	public void setOutType(String type) {
-		this.type = type;
-	}
-
-	@Override
-	public String getOutType() {
-		return type;
-	}
-
-	@Override
-	public void setDefaultData(String defaultData) {
-		this.defaultData = defaultData;
-	}
-
-	@Override
-	public String getDefaultData() {
-		return defaultData;
+		this.data = DEFAULT_DATA;
 	}
 
 	@Override
 	public String readConfig() {
-		LOG.debug("size = " + String.valueOf(size) + " type = " + type + " data = " + defaultData);
-		return "Current out image size is " + size + " and type is " + type + " and data is " + defaultData;
+		return "Current out image size is " + size + " and type is " + type + " and data is " + data;
+	}
+
+	@Override
+	public void writeConfig(String size, String type, String data) {
+		this.size = size;
+		this.type = type;
+		this.data = data;
 	}
 
 	@Override
 	public String readCurrentSize() {
-		return String.valueOf(getQrCodeSize());
+		return size;
 	}
 
 	@Override
 	public String readCurrentType() {
-		return String.valueOf(getOutType());
+		return type;
 	}
 
 	@Override
 	public String readCurrentData() {
-		return String.valueOf(getDefaultData());
+		return data;
+	}
+
+	@Override
+	public void writeCurrentSize(String size) {
+		this.size = size;
+	}
+
+	@Override
+	public void writeCurrentType(String type) {
+		this.type = type;
+	}
+
+	@Override
+	public void writeCurrentData(String data) {
+		this.data = data;
 	}
 }
